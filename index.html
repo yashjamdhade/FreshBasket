@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FreshBasket - Fruit Store</title>
+  <style>
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f7faf7;color:#183b24}
+    .navbar{background:#fff;border-bottom:1px solid #e0e9e2;position:sticky;top:0;z-index:10}
+    .nav{max-width:1200px;margin:auto;padding:16px 22px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+    .logo{font-size:25px;font-weight:800;color:#198754}.logo span{color:#6c757d}
+    .nav a{color:#198754;text-decoration:none;font-weight:700}
+    .hero{max-width:1200px;margin:35px auto 20px;padding:35px 25px;background:linear-gradient(135deg,#e8f7eb,#fff);border-radius:20px}
+    .hero h1{font-size:42px;margin:0 0 10px}.hero p{font-size:18px;max-width:700px;line-height:1.6}
+    .container{max-width:1200px;margin:auto;padding:0 25px 50px}
+    .layout{display:grid;grid-template-columns:1.2fr .8fr;gap:25px}
+    .card{background:#fff;border:1px solid #dce8df;border-radius:16px;padding:25px;box-shadow:0 5px 20px rgba(0,0,0,.04)}
+    h2{margin-top:0}
+    .products{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+    .product{border:1px solid #e0e9e2;border-radius:12px;padding:15px;background:#fcfffc}
+    .product h3{margin:0 0 7px}.price{font-weight:800;color:#198754;font-size:19px}
+    .select-row{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:14px}
+    .qty{width:85px!important;padding:8px!important;margin-left:auto}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .form-group{display:flex;flex-direction:column}.form-group.full{grid-column:1/-1}
+    .form-group label{font-weight:700;margin-bottom:6px}
+    .form-group input,.form-group select{padding:11px;border:1px solid #ccd9cf;border-radius:8px;font-size:15px}
+    .btn{border:0;border-radius:9px;padding:12px 18px;font-size:15px;font-weight:700;cursor:pointer}
+    .btn-primary{background:#198754;color:#fff}.btn-primary:hover{background:#146c43}
+    .summary{margin-top:18px;padding:15px;background:#f1f8f2;border-radius:10px}
+    .note{font-size:13px;color:#66756b;line-height:1.5}
+    .order-link{display:inline-block;margin-top:18px;color:#198754;font-weight:700;text-decoration:none}
+    .footer{text-align:center;color:#66756b;padding:25px}.required{color:#b02a37}
+    @media(max-width:850px){.layout{grid-template-columns:1fr}.products{grid-template-columns:1fr}}
+    @media(max-width:600px){.form-grid{grid-template-columns:1fr}.hero h1{font-size:31px}.nav{padding:14px}.container{padding:0 14px 35px}}
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav">
+      <div class="logo">🛒 Fresh<span>Basket</span></div>
+      <a href="view.php">📦 View All Orders</a>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="container" style="padding-bottom:0">
+      <h1>Fresh Fruits, Delivered 🍎</h1>
+      <p>Choose one or more fruits, set the quantity for each selected item, enter your delivery details and place your order.</p>
+    </div>
+  </section>
+
+  <main class="container">
+    <form action="save.php" method="post" onsubmit="return validateOrder()" oninput="updateTotal()">
+      <div class="layout">
+        <section class="card">
+          <h2>🍓 Select Your Fruits</h2>
+          <p class="note">You can select <strong>multiple items</strong>. Set the quantity beside each selected fruit.</p>
+
+          <div class="products">
+            <div class="product">
+              <h3>🍎 Apple</h3><div class="price">₹150 / kg</div>
+              <div class="select-row">
+                <input type="checkbox" name="products[]" value="Apple" data-price="150" onchange="updateTotal()">
+                <label>Select Apple</label>
+                <input class="qty" type="number" name="quantity_Apple" min="1" value="1" disabled onchange="updateTotal()">
+              </div>
+            </div>
+
+            <div class="product">
+              <h3>🍌 Banana</h3><div class="price">₹60 / dozen</div>
+              <div class="select-row">
+                <input type="checkbox" name="products[]" value="Banana" data-price="60" onchange="updateTotal()">
+                <label>Select Banana</label>
+                <input class="qty" type="number" name="quantity_Banana" min="1" value="1" disabled onchange="updateTotal()">
+              </div>
+            </div>
+
+            <div class="product">
+              <h3>🥭 Alphonso Mango</h3><div class="price">₹180 / kg</div>
+              <div class="select-row">
+                <input type="checkbox" name="products[]" value="Alphonso Mango" data-price="180" onchange="updateTotal()">
+                <label>Select Mango</label>
+                <input class="qty" type="number" name="quantity_Alphonso_Mango" min="1" value="1" disabled onchange="updateTotal()">
+              </div>
+            </div>
+
+            <div class="product">
+              <h3>🍊 Orange</h3><div class="price">₹100 / kg</div>
+              <div class="select-row">
+                <input type="checkbox" name="products[]" value="Orange" data-price="100" onchange="updateTotal()">
+                <label>Select Orange</label>
+                <input class="qty" type="number" name="quantity_Orange" min="1" value="1" disabled onchange="updateTotal()">
+              </div>
+            </div>
+
+            <div class="product">
+              <h3>🍇 Green Grapes</h3><div class="price">₹120 / kg</div>
+              <div class="select-row">
+                <input type="checkbox" name="products[]" value="Green Grapes" data-price="120" onchange="updateTotal()">
+                <label>Select Grapes</label>
+                <input class="qty" type="number" name="quantity_Green_Grapes" min="1" value="1" disabled onchange="updateTotal()">
+              </div>
+            </div>
+
+            <div class="product">
+              <h3>🍉 Watermelon</h3><div class="price">₹40 / kg</div>
+              <div class="select-row">
+                <input type="checkbox" name="products[]" value="Watermelon" data-price="40" onchange="updateTotal()">
+                <label>Select Watermelon</label>
+                <input class="qty" type="number" name="quantity_Watermelon" min="1" value="1" disabled onchange="updateTotal()">
+              </div>
+            </div>
+          </div>
+
+          <div class="summary">Order total: <strong id="total">₹0.00</strong></div>
+        </section>
+
+        <section class="card">
+          <h2>📍 Delivery Details</h2>
+          <div class="form-grid">
+            <div class="form-group full">
+              <label>Full Name <span class="required">*</span></label>
+              <input name="customer_name" required placeholder="Your full name">
+            </div>
+            <div class="form-group">
+              <label>Email <span class="required">*</span></label>
+              <input type="email" name="email" required placeholder="you@example.com">
+            </div>
+            <div class="form-group">
+              <label>Phone <span class="required">*</span></label>
+              <input name="phone" required pattern="[0-9]{10}" maxlength="10" placeholder="10-digit number">
+            </div>
+            <div class="form-group full">
+              <label>Address <span class="required">*</span></label>
+              <input name="address" required placeholder="House no., street, area">
+            </div>
+            <div class="form-group">
+              <label>City <span class="required">*</span></label>
+              <input name="city" required placeholder="City">
+            </div>
+            <div class="form-group">
+              <label>State <span class="required">*</span></label>
+              <select name="state" required>
+                <option value="">Select State</option>
+                <option>Maharashtra</option><option>Gujarat</option><option>Madhya Pradesh</option>
+                <option>Karnataka</option><option>Delhi</option><option>Rajasthan</option><option>Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Pincode <span class="required">*</span></label>
+              <input name="pincode" required pattern="[0-9]{6}" maxlength="6" placeholder="6-digit pincode">
+            </div>
+            <div class="form-group">
+              <label>Payment</label>
+              <select name="payment_method"><option>Cash on Delivery</option></select>
+            </div>
+          </div>
+
+          <button class="btn btn-primary" style="width:100%;margin-top:20px" type="submit">🛍️ Place Order</button>
+          <p class="note">The selected items and quantities are securely processed by <strong>save.php</strong> and stored in the MySQL <strong>orders</strong> table.</p>
+          <a class="order-link" href="view.php">📊 View complete database orders →</a>
+        </section>
+      </div>
+    </form>
+  </main>
+
+  <footer class="footer">FreshBasket MySQL Edition • PHP + MySQL</footer>
+
+  <script>
+    const quantityNames = {
+      "Apple":"quantity_Apple",
+      "Banana":"quantity_Banana",
+      "Alphonso Mango":"quantity_Alphonso_Mango",
+      "Orange":"quantity_Orange",
+      "Green Grapes":"quantity_Green_Grapes",
+      "Watermelon":"quantity_Watermelon"
+    };
+
+    function updateTotal(){
+      let total = 0;
+      document.querySelectorAll('input[name="products[]"]').forEach(function(box){
+        const qty = document.querySelector('input[name="' + quantityNames[box.value] + '"]');
+        qty.disabled = !box.checked;
+        if(box.checked){
+          const quantity = Math.max(1, parseInt(qty.value || 1));
+          qty.value = quantity;
+          total += parseFloat(box.dataset.price) * quantity;
+        }
+      });
+      document.getElementById('total').textContent = '₹' + total.toFixed(2);
+    }
+
+    function validateOrder(){
+      const selected = document.querySelectorAll('input[name="products[]"]:checked');
+      if(selected.length === 0){
+        alert('Please select at least one fruit.');
+        return false;
+      }
+      return true;
+    }
+
+    updateTotal();
+  </script>
+</body>
+</html>
